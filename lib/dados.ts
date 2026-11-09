@@ -56,6 +56,17 @@ export function ordenar(lista: Maternidade[]): Maternidade[] {
   });
 }
 
+const Z_95 = 1.96;
+
+/** Meia largura do intervalo de confiança de 95% (Wilson), em pontos percentuais inteiros. */
+export function margemDeErro(cesareas: number, partos: number): number | null {
+  if (partos <= 0) return null;
+  const p = cesareas / partos;
+  const z2 = Z_95 * Z_95;
+  const meia = (Z_95 * Math.sqrt((p * (1 - p)) / partos + z2 / (4 * partos * partos))) / (1 + z2 / partos);
+  return Math.round(meia * 100);
+}
+
 export function porcento(valor: number | null): string {
   return valor === null ? "–" : `${Math.round(valor * 100)}%`;
 }

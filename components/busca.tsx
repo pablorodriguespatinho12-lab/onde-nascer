@@ -7,6 +7,7 @@ import {
   type Maternidade,
   carregarEstado,
   cidadesDe,
+  margemDeErro,
   ordenar,
   porcento,
   taxa,
@@ -95,6 +96,7 @@ function Resultado({ cidade, lista }: { cidade: string; lista: Maternidade[] }) 
 
 function Item({ m, media }: { m: Maternidade; media: number | null }) {
   const br = taxaBaixoRisco(m);
+  const margem = br === null ? null : margemDeErro(m.cesareas_br, m.partos_br);
   const total = taxa(m.cesareas, m.partos);
   const endereco = [m.endereco, m.bairro].filter(Boolean).join(" · ");
   return (
@@ -113,6 +115,7 @@ function Item({ m, media }: { m: Maternidade; media: number | null }) {
         <span className="item-detalhe">Menos de {MINIMO_BAIXO_RISCO} partos de baixo risco: poucos casos para comparar.</span>
       )}
       <span className="item-detalhe">
+        {margem !== null && <>Margem de erro: ± {margem} pontos · </>}
         {m.partos.toLocaleString("pt-BR")} partos em 2024 · cesárea em todos os partos: {porcento(total)}
       </span>
     </li>

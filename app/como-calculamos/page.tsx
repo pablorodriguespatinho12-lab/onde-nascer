@@ -28,8 +28,24 @@ export default function ComoCalculamos() {
         risco de todas as maternidades listadas, e não a média das porcentagens.
       </p>
       <p>
+        <strong>Margem de erro.</strong> Cada maternidade mostra a margem de erro de 95% (método de Wilson). Com
+        poucos partos, ela fica grande: diferenças menores que a margem não querem dizer muita coisa.
+      </p>
+      <p>
         <strong>O que este número não diz.</strong> Ele não diz se uma cesárea foi necessária ou não, nem a
-        qualidade do atendimento. Serve para fazer a pergunta certa a quem acompanha a sua gestação.
+        qualidade do atendimento. Hospitais de referência recebem casos graves (doença do coração na mãe,
+        descolamento de placenta) que continuam dentro do baixo risco de Robson, então podem ter taxa maior por
+        isso. A classificação de Robson depende de como cada hospital preenche a declaração de nascido vivo. Use o
+        número para fazer a pergunta certa a quem acompanha a sua gestação.
+      </p>
+      <p>
+        <strong>Os dados podem mudar.</strong> O arquivo de 2024 foi publicado pelo Ministério da Saúde em maio de
+        2026 e ainda pode ser revisado. Registros sem hospital ou sem tipo de parto ficam de fora (37.288 de
+        2.389.325).
+      </p>
+      <p>
+        <strong>Correções.</strong> É de um hospital e quer comentar um número? Abra uma &quot;issue&quot; no
+        repositório do projeto no GitHub. Toda nota de esclarecimento é publicada junto do dado.
       </p>
       <p>
         <strong>Gêmeos.</strong> O SINASC conta cada bebê que nasce, então um parto de gêmeos conta duas vezes. O
