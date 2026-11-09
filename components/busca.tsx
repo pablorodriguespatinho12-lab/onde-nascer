@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { EVENTO_FOCO } from "@/components/cena-3d";
 import {
   ESTADOS,
   MINIMO_BAIXO_RISCO,
@@ -37,6 +38,12 @@ export default function Busca() {
   const lista = estado.tipo === "pronto" ? estado.lista : [];
   const cidades = useMemo(() => cidadesDe(lista), [lista]);
   const daCidade = useMemo(() => ordenar(lista.filter((m) => m.cidade === cidade)), [lista, cidade]);
+
+  // A cidade escolhida acende e a câmera vai até ela na cena 3D.
+  const municipio = daCidade.length > 0 ? Number(daCidade[0].municipio) : null;
+  useEffect(() => {
+    window.dispatchEvent(new CustomEvent(EVENTO_FOCO, { detail: { municipio } }));
+  }, [municipio]);
 
   return (
     <section style={{ display: "flex", flexDirection: "column", gap: 20 }}>

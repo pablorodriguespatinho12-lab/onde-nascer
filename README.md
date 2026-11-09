@@ -13,6 +13,8 @@ Projeto independente: não é site do governo e não é conselho médico.
 1. `dados/processar.py` lê o zip do SINASC em fluxo e conta partos e cesáreas por hospital.
 2. `dados/enriquecer.py` busca nome e endereço no CNES e o nome da cidade no IBGE (com cache).
 3. O site (Next.js, exportação estática) carrega só o JSON do estado escolhido (~25 KB em média).
+4. `dados/gerar_historia.py` junta as maternidades às coordenadas das cidades ([kelvins/municipios-brasileiros](https://github.com/kelvins/municipios-brasileiros), salvo em `dados/bruto/municipios.csv`) e gera `public/historia.json` (21 KB comprimido).
+5. A abertura é uma cena em Three.js: 2.712 cubos, um por maternidade, viram esfera, mapa, torres e histograma conforme a rolagem. A posição é calculada na placa de vídeo, e os 128 KB comprimidos do 3D só carregam depois da página.
 
 Custo para rodar: R$ 0 (site estático, sem servidor nem banco).
 

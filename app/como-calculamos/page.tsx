@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { MINIMO_BAIXO_RISCO } from "@/lib/dados";
 
-export const metadata: Metadata = { title: "Como calculamos · Onde Nascer" };
+export const metadata: Metadata = { title: "Como calculamos | Onde Nascer" };
 
 export default function ComoCalculamos() {
   return (

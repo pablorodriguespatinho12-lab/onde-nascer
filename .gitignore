@@ -4,3 +4,4 @@ out/
 dados/bruto/
 next-env.d.ts
 *.tsbuildinfo
+__pycache__/
