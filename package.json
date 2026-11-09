@@ -1,0 +1,22 @@
+{
+  "name": "onde-nascer",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Taxa de cesárea por maternidade no Brasil, a partir de dados abertos do SUS (SINASC 2024)",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "dados": "python3 -I dados/processar.py dados/bruto/SINASC_2024_csv.zip public/dados && python3 -I dados/enriquecer.py public/dados dados/cache-cnes.json"
+  },
+  "dependencies": {
+    "next": "14.2.35",
+    "react": "18.3.1",
+    "react-dom": "18.3.1"
+  },
+  "devDependencies": {
+    "@types/node": "20.14.10",
+    "@types/react": "18.3.3",
+    "@types/react-dom": "18.3.0",
+    "typescript": "5.5.3"
+  }
+}

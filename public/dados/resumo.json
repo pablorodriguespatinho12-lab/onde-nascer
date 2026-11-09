@@ -1,0 +1,175 @@
+{
+ "linhas": 2389325,
+ "descartadas": 37288,
+ "brasil": {
+  "partos": 2350973,
+  "cesareas": 1441457,
+  "partos_br": 1369158,
+  "cesareas_br": 654725
+ },
+ "por_uf": {
+  "RO": {
+   "partos": 21150,
+   "cesareas": 15119,
+   "partos_br": 10553,
+   "cesareas_br": 6023
+  },
+  "AC": {
+   "partos": 13312,
+   "cesareas": 7183,
+   "partos_br": 7972,
+   "cesareas_br": 3220
+  },
+  "AM": {
+   "partos": 61407,
+   "cesareas": 29218,
+   "partos_br": 39088,
+   "cesareas_br": 13591
+  },
+  "RR": {
+   "partos": 10548,
+   "cesareas": 4754,
+   "partos_br": 6458,
+   "cesareas_br": 2055
+  },
+  "PA": {
+   "partos": 111560,
+   "cesareas": 66967,
+   "partos_br": 65213,
+   "cesareas_br": 31808
+  },
+  "AP": {
+   "partos": 13345,
+   "cesareas": 5959,
+   "partos_br": 8851,
+   "cesareas_br": 2900
+  },
+  "TO": {
+   "partos": 21577,
+   "cesareas": 13166,
+   "partos_br": 12309,
+   "cesareas_br": 5543
+  },
+  "MA": {
+   "partos": 87142,
+   "cesareas": 52359,
+   "partos_br": 51065,
+   "cesareas_br": 24538
+  },
+  "PI": {
+   "partos": 41700,
+   "cesareas": 27306,
+   "partos_br": 23901,
+   "cesareas_br": 12800
+  },
+  "CE": {
+   "partos": 105151,
+   "cesareas": 72171,
+   "partos_br": 56847,
+   "cesareas_br": 32688
+  },
+  "RN": {
+   "partos": 36630,
+   "cesareas": 25584,
+   "partos_br": 20122,
+   "cesareas_br": 11450
+  },
+  "PB": {
+   "partos": 49089,
+   "cesareas": 32997,
+   "partos_br": 27870,
+   "cesareas_br": 15162
+  },
+  "PE": {
+   "partos": 110264,
+   "cesareas": 60650,
+   "partos_br": 67159,
+   "cesareas_br": 28251
+  },
+  "BA": {
+   "partos": 151289,
+   "cesareas": 79597,
+   "partos_br": 97523,
+   "cesareas_br": 40385
+  },
+  "AL": {
+   "partos": 45219,
+   "cesareas": 26443,
+   "partos_br": 27335,
+   "cesareas_br": 12369
+  },
+  "SE": {
+   "partos": 28289,
+   "cesareas": 13328,
+   "partos_br": 18673,
+   "cesareas_br": 6238
+  },
+  "MG": {
+   "partos": 217250,
+   "cesareas": 129636,
+   "partos_br": 128429,
+   "cesareas_br": 57580
+  },
+  "ES": {
+   "partos": 48805,
+   "cesareas": 30542,
+   "partos_br": 27940,
+   "cesareas_br": 13157
+  },
+  "RJ": {
+   "partos": 162352,
+   "cesareas": 101447,
+   "partos_br": 95611,
+   "cesareas_br": 46957
+  },
+  "SP": {
+   "partos": 468503,
+   "cesareas": 291817,
+   "partos_br": 271625,
+   "cesareas_br": 132888
+  },
+  "PR": {
+   "partos": 129572,
+   "cesareas": 85305,
+   "partos_br": 70763,
+   "cesareas_br": 36948
+  },
+  "SC": {
+   "partos": 92652,
+   "cesareas": 53075,
+   "partos_br": 54931,
+   "cesareas_br": 23314
+  },
+  "RS": {
+   "partos": 111367,
+   "cesareas": 73542,
+   "partos_br": 62254,
+   "cesareas_br": 32526
+  },
+  "MS": {
+   "partos": 37127,
+   "cesareas": 25172,
+   "partos_br": 20006,
+   "cesareas_br": 11022
+  },
+  "MT": {
+   "partos": 54400,
+   "cesareas": 36968,
+   "partos_br": 29267,
+   "cesareas_br": 15685
+  },
+  "GO": {
+   "partos": 76404,
+   "cesareas": 55417,
+   "partos_br": 40726,
+   "cesareas_br": 24349
+  },
+  "DF": {
+   "partos": 44869,
+   "cesareas": 25735,
+   "partos_br": 26667,
+   "cesareas_br": 11278
+  }
+ },
+ "maternidades": 2712
+}
