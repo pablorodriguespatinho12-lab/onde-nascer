@@ -11,16 +11,22 @@ export const VERTICE = /* glsl */ `
   uniform float uMapa;
   uniform float uTorre;
   uniform float uHistograma;
-  uniform float uTempo;
+  uniform float uGiro;
   uniform float uFoco;
+  uniform vec2 uMouse;
+  uniform float uForca;
+  uniform float uAspecto;
 
   varying vec3 vNormal;
   varying float vTaxa;
   varying float vAltura;
   varying float vFoco;
   varying float vProfundidade;
+  varying float vPerto;
 
   const float ALTURA_MAXIMA = 15.0;
+  const float RAIO_MOUSE = 0.34;
+  const float EMPURRAO_MOUSE = 0.05;
 
   float onda(float valor) {
     float inicio = aSemente * 0.38;
@@ -38,8 +44,7 @@ export const VERTICE = /* glsl */ `
     float noHistograma = onda(uHistograma);
     float crescimento = onda(uTorre);
 
-    vec3 esfera = girar(aEsfera, uTempo * 0.09);
-    vec3 centro = mix(mix(esfera, aMapa, noMapa), aHistograma, noHistograma);
+    vec3 centro = mix(mix(girar(aEsfera, uGiro), aMapa, noMapa), aHistograma, noHistograma);
 
     float temTaxa = step(0.0, aTaxa);
     float alturaTorre = mix(0.14, 0.14 + max(aTaxa, 0.0) * ALTURA_MAXIMA, crescimento * temTaxa);
@@ -48,14 +53,23 @@ export const VERTICE = /* glsl */ `
     float some = 1.0 - noHistograma * (1.0 - temTaxa);
     float destaque = 1.0 - aFoco * uFoco * 0.12;
 
+    vec4 centroVista = viewMatrix * vec4(centro, 1.0);
+    vec4 centroTela = projectionMatrix * centroVista;
+    vec2 distancia = (centroTela.xy / centroTela.w - uMouse) * vec2(uAspecto, 1.0);
+    float tamanho = length(distancia);
+    float perto = smoothstep(RAIO_MOUSE, 0.0, tamanho) * uForca;
+    vec2 direcao = tamanho > 0.001 ? distancia / tamanho : vec2(0.0);
+
     vec3 local = vec3(position.x * largura * destaque, position.y * altura, position.z * largura * destaque) * some;
     vec4 mundo = viewMatrix * vec4(centro + local, 1.0);
+    mundo.xy += direcao * perto * EMPURRAO_MOUSE * -centroVista.z;
 
     vNormal = normal;
     vTaxa = aTaxa;
     vAltura = position.y;
     vFoco = aFoco;
     vProfundidade = -mundo.z;
+    vPerto = perto;
     gl_Position = projectionMatrix * mundo;
   }
 `;
@@ -68,12 +82,15 @@ export const FRAGMENTO = /* glsl */ `
   uniform float uFoco;
   uniform float uPerto;
   uniform float uLonge;
+  uniform float uSombra;
+  uniform float uLarguraTela;
 
   varying vec3 vNormal;
   varying float vTaxa;
   varying float vAltura;
   varying float vFoco;
   varying float vProfundidade;
+  varying float vPerto;
 
   const vec3 NEUTRO = vec3(0.86, 0.88, 0.90);
   const vec3 BAIXO = vec3(0.14, 0.82, 0.72);
@@ -101,8 +118,12 @@ export const FRAGMENTO = /* glsl */ `
 
     acesa *= 1.0 - uFoco * (1.0 - vFoco) * 0.86;
     acesa += uFoco * vFoco * cor * 0.12;
+    acesa += cor * vPerto * 0.75;
 
     float neblina = smoothstep(uPerto, uLonge, vProfundidade);
-    gl_FragColor = vec4(mix(acesa, FUNDO, neblina * (1.0 - uFoco * vFoco)), 1.0);
+    vec3 final = mix(acesa, FUNDO, neblina * (1.0 - uFoco * vFoco));
+
+    float sombraEsquerda = smoothstep(0.0, uLarguraTela * 0.46, gl_FragCoord.x);
+    gl_FragColor = vec4(mix(final, FUNDO, uSombra * (1.0 - sombraEsquerda) * 0.82), 1.0);
   }
 `;

@@ -34,7 +34,7 @@ function ativarEntradasDeTexto(raiz: HTMLElement): IntersectionObserver {
   return observador;
 }
 
-/** Sem suporte a 3D, a página continua inteira: só o fundo fica parado. */
+/** Sem suporte a 3D, a página continua inteira: só o fundo fica parado. Parada, a cena não gasta a placa de vídeo. */
 export default function Cena3D() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
