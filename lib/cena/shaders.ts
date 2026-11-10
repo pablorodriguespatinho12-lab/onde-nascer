@@ -26,7 +26,8 @@ export const VERTICE = /* glsl */ `
 
   const float ALTURA_MAXIMA = 15.0;
   const float RAIO_MOUSE = 0.34;
-  const float EMPURRAO_MOUSE = 0.05;
+  const float EMPURRAO_MOUSE = 0.07;
+  const float CRESCE_NO_MOUSE = 0.9;
 
   float onda(float valor) {
     float inicio = aSemente * 0.38;
@@ -60,7 +61,8 @@ export const VERTICE = /* glsl */ `
     float perto = smoothstep(RAIO_MOUSE, 0.0, tamanho) * uForca;
     vec2 direcao = tamanho > 0.001 ? distancia / tamanho : vec2(0.0);
 
-    vec3 local = vec3(position.x * largura * destaque, position.y * altura, position.z * largura * destaque) * some;
+    float incha = 1.0 + perto * CRESCE_NO_MOUSE;
+    vec3 local = vec3(position.x * largura * destaque * incha, position.y * altura * mix(incha, 1.0, noMapa), position.z * largura * destaque * incha) * some;
     vec4 mundo = viewMatrix * vec4(centro + local, 1.0);
     mundo.xy += direcao * perto * EMPURRAO_MOUSE * -centroVista.z;
 
@@ -80,6 +82,7 @@ export const FRAGMENTO = /* glsl */ `
   uniform float uCor;
   uniform float uExtremos;
   uniform float uFoco;
+  uniform float uBrilho;
   uniform float uPerto;
   uniform float uLonge;
   uniform float uSombra;
@@ -122,6 +125,8 @@ export const FRAGMENTO = /* glsl */ `
 
     float neblina = smoothstep(uPerto, uLonge, vProfundidade);
     vec3 final = mix(acesa, FUNDO, neblina * (1.0 - uFoco * vFoco));
+
+    final = mix(FUNDO, final, clamp(uBrilho + vPerto * 0.85, 0.0, 1.0));
 
     float sombraEsquerda = smoothstep(0.0, uLarguraTela * 0.46, gl_FragCoord.x);
     gl_FragColor = vec4(mix(final, FUNDO, uSombra * (1.0 - sombraEsquerda) * 0.82), 1.0);

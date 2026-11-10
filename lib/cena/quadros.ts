@@ -9,6 +9,8 @@ export type Quadro = {
   cor: number;
   extremos: number;
   foco: number;
+  /** 1 = cubos acesos; perto de 0 eles viram um fundo discreto atrás das ilustrações. */
+  brilho: number;
   camera: Vetor;
   alvo: Vetor;
   /** 1 empurra a imagem para longe do texto: direita no computador, cima no celular. */
@@ -17,26 +19,32 @@ export type Quadro = {
   ajusteCelular: number;
 };
 
-const CAMPOS = ["mapa", "torre", "histograma", "cor", "extremos", "foco", "deslocamento", "ajusteCelular"] as const;
+const CAMPOS = ["mapa", "torre", "histograma", "cor", "extremos", "foco", "brilho", "deslocamento", "ajusteCelular"] as const;
 
 /** Índice do quadro que aproxima a câmera da cidade de exemplo. */
-export const CENA_CIDADE = 7;
+export const CENA_CIDADE = 9;
 export const OFFSET_CIDADE: Vetor = [13, 21, 27];
 export const ALTURA_ALVO_CIDADE = 5;
+const BRILHO_DE_FUNDO = 0.2;
 
 export function montarQuadros(alturaHistograma: number, cidade: readonly [number, number]): readonly Quadro[] {
   const meio = alturaHistograma / 2;
   const [cx, cz] = cidade;
-  const base = { mapa: 1, torre: 0, histograma: 0, cor: 0, extremos: 0, foco: 0, deslocamento: 1, ajusteCelular: 1 };
+  const base = { mapa: 1, torre: 0, histograma: 0, cor: 0, extremos: 0, foco: 0, brilho: 1, deslocamento: 1, ajusteCelular: 1 };
+  const fundo = { ...base, mapa: 0, brilho: BRILHO_DE_FUNDO, deslocamento: 0, ajusteCelular: 0 };
   const torres = { ...base, torre: 1, cor: 1 };
   const grafico = { ...torres, histograma: 1 };
   return [
-    { ...base, mapa: 0, camera: [0, 3, 88], alvo: [0, 0, 0] },
+    // Abertura e os 4 problemas: a esfera fica ao fundo, quase apagada, e só acende perto do cursor.
+    { ...fundo, brilho: 0.28, camera: [0, 3, 96], alvo: [0, 0, 0] },
+    { ...fundo, camera: [-10, 8, 92], alvo: [0, 0, 0] },
+    { ...fundo, camera: [8, -6, 100], alvo: [0, 0, 0] },
+    { ...fundo, camera: [-6, 12, 96], alvo: [0, 0, 0] },
+    { ...fundo, camera: [10, 4, 90], alvo: [0, 0, 0] },
+    // Propósito: as maternidades acendem.
     { ...base, mapa: 0, camera: [-20, 30, 74], alvo: [0, 0, 0] },
     { ...base, camera: [0, 66, 9], alvo: [0, 0, 0] },
     { ...torres, camera: [30, 27, 52], alvo: [3, 3, 0] },
-    { ...torres, camera: [-38, 24, 56], alvo: [-4, 4, 2] },
-    { ...grafico, camera: [0, meio + 5, 63], alvo: [0, meio, 0] },
     { ...grafico, extremos: 1, camera: [-15, meio + 9, 61], alvo: [0, meio, 0] },
     { ...torres, foco: 1, ajusteCelular: 0.35, camera: [cx + OFFSET_CIDADE[0], OFFSET_CIDADE[1], cz + OFFSET_CIDADE[2]], alvo: [cx, ALTURA_ALVO_CIDADE, cz] },
     { ...base, torre: 0.45, cor: 1, camera: [0, 62, 24], alvo: [0, 0, 0] },

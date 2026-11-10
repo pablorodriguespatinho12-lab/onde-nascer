@@ -7,6 +7,7 @@ Projeto independente: não é site do governo e não é conselho médico.
 - 2.389.325 nascimentos lidos; 2.712 maternidades com 50+ partos, em 1.798 cidades.
 - Cesárea no Brasil: 61,3% no total; 47,8% em gestação de baixo risco (Robson 1 a 4).
 - Mediana por maternidade: 70,8%. Em baixo risco, 10% das maternidades ficam abaixo de 20% e 10% acima de 93%.
+- Abertura (todos os nascimentos): 57% das cesáreas antes do trabalho de parto; 38% das cesáreas com 37 ou 38 semanas (30% nos partos normais); 34% nascem fora da cidade da mãe; 20% com menos de 7 consultas de pré-natal.
 - Conferência: 3 maternidades (SP, BA, RS) recontadas direto no CSV com outro código: as 3 batem.
 
 ## Como funciona
@@ -15,6 +16,8 @@ Projeto independente: não é site do governo e não é conselho médico.
 3. O site (Next.js, exportação estática) carrega só o JSON do estado escolhido (~25 KB em média).
 4. `dados/gerar_historia.py` junta as maternidades às coordenadas das cidades ([kelvins/municipios-brasileiros](https://github.com/kelvins/municipios-brasileiros), salvo em `dados/bruto/municipios.csv`) e gera `public/historia.json` (21 KB comprimido).
 5. A abertura é uma cena em Three.js: 2.712 cubos, um por maternidade, viram esfera, mapa, torres e histograma conforme a rolagem. A posição é calculada na placa de vídeo, e os 128 KB comprimidos do 3D só carregam depois da página.
+
+6. A abertura conta 4 problemas com ilustrações geradas por IA (`public/imagens/`, WebP de 22 a 34 KB, convertidas por `node dados/otimizar_imagens.mjs <originais> public/imagens`). Luz, cubos e imagens reagem ao cursor.
 
 Custo para rodar: R$ 0 (site estático, sem servidor nem banco).
 

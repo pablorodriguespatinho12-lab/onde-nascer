@@ -48,6 +48,18 @@ export default function ComoCalculamos() {
         repositório do projeto no GitHub. Toda nota de esclarecimento é publicada junto do dado.
       </p>
       <p>
+        <strong>Os 4 números da abertura.</strong> Contam todos os nascimentos do país em 2024, não só os de hospital.
+        Cesárea sem trabalho de parto: cesáreas em que a declaração marca que a cirurgia veio antes de o trabalho de
+        parto começar, entre as que têm essa resposta preenchida. 37 ou 38 semanas: parte das cesáreas (e dos partos
+        normais) com essa idade gestacional, entre as que têm a semana informada. Cidade diferente: o município de
+        nascimento não é o de residência da mãe. Menos de 7 consultas: entre os registros com o número de consultas
+        de pré-natal informado. Nenhum deles diz o motivo de cada caso.
+      </p>
+      <p>
+        <strong>Ilustrações.</strong> As imagens da página foram geradas por inteligência artificial e não retratam
+        pessoas reais.
+      </p>
+      <p>
         <strong>Gêmeos.</strong> O SINASC conta cada bebê que nasce, então um parto de gêmeos conta duas vezes. O
         efeito é pequeno: gêmeos ficam fora do grupo de baixo risco.
       </p>

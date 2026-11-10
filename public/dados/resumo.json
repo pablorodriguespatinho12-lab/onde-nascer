@@ -171,5 +171,17 @@
    "cesareas_br": 11278
   }
  },
- "maternidades": 2712
+ "maternidades": 2712,
+ "problemas": {
+  "ces_com_inicio": 1388390,
+  "ces_antes_do_trabalho": 797496,
+  "ces_com_semanas": 1438176,
+  "ces_37_38": 552308,
+  "vag_com_semanas": 932181,
+  "vag_37_38": 279762,
+  "com_cidades": 2389325,
+  "fora_da_cidade": 823755,
+  "com_consultas": 2352060,
+  "menos_de_7_consultas": 471102
+ }
 }

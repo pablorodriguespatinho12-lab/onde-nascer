@@ -70,7 +70,7 @@ function montarGeometria(historia: Historia): { geometria: InstancedBufferGeomet
 }
 
 function montarMaterial(): ShaderMaterial {
-  const numeros = ["uMapa", "uTorre", "uHistograma", "uGiro", "uFoco", "uCor", "uExtremos", "uForca", "uAspecto", "uPerto", "uLonge", "uSombra", "uLarguraTela"];
+  const numeros = ["uMapa", "uTorre", "uHistograma", "uGiro", "uFoco", "uBrilho", "uCor", "uExtremos", "uForca", "uAspecto", "uPerto", "uLonge", "uSombra", "uLarguraTela"];
   return new ShaderMaterial({
     vertexShader: VERTICE,
     fragmentShader: FRAGMENTO,
@@ -187,6 +187,7 @@ export function criarCena(canvas: HTMLCanvasElement, historia: Historia, semMovi
     u.uCor.value = q.cor;
     u.uExtremos.value = q.extremos;
     u.uFoco.value = q.foco;
+    u.uBrilho.value = q.brilho;
     u.uGiro.value = giro;
     u.uForca.value = forca;
     (u.uMouse.value as Vector2).set(mouseAlvoX, mouseAlvoY);
