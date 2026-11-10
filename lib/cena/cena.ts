@@ -1,4 +1,4 @@
-/** A cena 3D: um único desenho de 2.712 cubos. Gira sozinha nas formas soltas; no mapa, só desenha quando algo se move. */
+/** A cena 3D: um único desenho de 2.712 cubos, sempre em movimento (gira e ondula sozinha). Com "reduzir movimento", só desenha quando algo muda. */
 import {
   BoxGeometry,
   InstancedBufferAttribute,
@@ -201,7 +201,7 @@ export function criarCena(canvas: HTMLCanvasElement, historia: Historia, fracoes
     u.uAneis.value = q.aneis;
     u.uSatelite.value = q.satelite;
     u.uGrade.value = q.grade;
-    u.uVida.value = semMovimento ? 0 : q.vida;
+    u.uVida.value = semMovimento ? 0 : 1;
     u.uTempo.value = relogio;
     u.uGiro.value = giro;
     u.uForca.value = forca;
@@ -219,10 +219,10 @@ export function criarCena(canvas: HTMLCanvasElement, historia: Historia, fracoes
     const escolheu = Number(municipioEscolhido !== null);
     passo = semMovimento ? passoAlvo : amortecer(passo, passoAlvo, VELOCIDADE_ROLAGEM, dt);
     misturaCidade = semMovimento ? escolheu : amortecer(misturaCidade, escolheu, VELOCIDADE_CIDADE, dt);
-    // O relógio só anda nas formas soltas: no mapa e nas torres a cena para e não gasta a placa de vídeo.
-    const vida = semMovimento ? 0 : quadroEm(quadros, passo).vida;
-    relogio += dt * vida;
-    giroSozinho += dt * vida * GIRO_SOZINHO;
+    if (!semMovimento) {
+      relogio += dt;
+      giroSozinho += dt * GIRO_SOZINHO;
+    }
     giro = semMovimento ? passo * GIRO_POR_PASSO : amortecer(giro, passo * GIRO_POR_PASSO + giroMouse + giroSozinho, VELOCIDADE_GIRO, dt);
     forca = amortecer(forca, tempo - ultimoMovimento < MOUSE_PARADO_S ? 1 : 0, VELOCIDADE_FORCA, dt);
     mouseX = amortecer(mouseX, mouseAlvoX, VELOCIDADE_MOUSE, dt);

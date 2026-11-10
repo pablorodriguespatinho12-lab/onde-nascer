@@ -14,8 +14,6 @@ export type Quadro = {
   aneis: number;
   satelite: number;
   grade: number;
-  /** 1 = a cena gira e respira sozinha, mesmo sem rolar a página. */
-  vida: number;
   camera: Vetor;
   alvo: Vetor;
   /** 1 empurra a cena para longe do texto: direita no computador, cima no celular. */
@@ -24,7 +22,7 @@ export type Quadro = {
   ajusteCelular: number;
 };
 
-const CAMPOS = ["mapa", "torre", "histograma", "cor", "extremos", "foco", "nivel", "aneis", "satelite", "grade", "vida", "deslocamento", "ajusteCelular"] as const;
+const CAMPOS = ["mapa", "torre", "histograma", "cor", "extremos", "foco", "nivel", "aneis", "satelite", "grade", "deslocamento", "ajusteCelular"] as const;
 
 /** Índice do quadro que aproxima a câmera da cidade de exemplo. */
 export const CENA_CIDADE = 9;
@@ -34,8 +32,8 @@ export const ALTURA_ALVO_CIDADE = 5;
 export function montarQuadros(alturaHistograma: number, cidade: readonly [number, number]): readonly Quadro[] {
   const meio = alturaHistograma / 2;
   const [cx, cz] = cidade;
-  const base = { mapa: 1, torre: 0, histograma: 0, cor: 0, extremos: 0, foco: 0, nivel: 0, aneis: 0, satelite: 0, grade: 0, vida: 0, deslocamento: 1, ajusteCelular: 1 };
-  const solto = { ...base, mapa: 0, vida: 1, alvo: [0, 0, 0] as const };
+  const base = { mapa: 1, torre: 0, histograma: 0, cor: 0, extremos: 0, foco: 0, nivel: 0, aneis: 0, satelite: 0, grade: 0, deslocamento: 1, ajusteCelular: 1 };
+  const solto = { ...base, mapa: 0, alvo: [0, 0, 0] as const };
   const torres = { ...base, torre: 1, cor: 1 };
   const grafico = { ...torres, histograma: 1 };
   return [

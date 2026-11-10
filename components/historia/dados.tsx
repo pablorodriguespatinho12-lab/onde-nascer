@@ -11,6 +11,7 @@ export default function Dados() {
     <>
       <section className="passo" data-passo>
         <div className="passo-texto">
+          <p className="rotulo">O propósito</p>
           <h2>Escolher onde nascer não devia ser no escuro.</h2>
           <p>
             Cada ponto de luz é uma das <strong>{milhar(MATERNIDADES.total)}</strong> maternidades do país. Este site mostra quanto
@@ -21,6 +22,7 @@ export default function Dados() {
 
       <section className="passo" data-passo>
         <div className="passo-texto">
+          <p className="rotulo">O mapa</p>
           <h2>Este é o mapa delas.</h2>
           <p>Cada maternidade na sua cidade. Juntas, fizeram {milhar(MATERNIDADES.partos)} partos em 2024.</p>
         </div>
@@ -28,6 +30,7 @@ export default function Dados() {
 
       <section className="passo" data-passo>
         <div className="passo-texto">
+          <p className="rotulo">A altura</p>
           <p className="numeros">
             <Contador className="alto" valor={BRASIL.geral} />
             <Contador className="meio" valor={BRASIL.baixoRisco} />
@@ -49,6 +52,7 @@ export default function Dados() {
 
       <section className="passo" data-passo>
         <div className="passo-texto">
+          <p className="rotulo">As pontas</p>
           <p className="numeros">
             <Contador className="baixo" valor={MATERNIDADES.abaixoDe} />
             <Contador className="alto" valor={MATERNIDADES.acimaDe} />
@@ -67,6 +71,7 @@ export default function Dados() {
 
       <section className="passo" data-passo>
         <div className="passo-texto">
+          <p className="rotulo">Um exemplo</p>
           <p className="numeros">
             <Contador className="baixo" valor={exemplo.menor} />
             <Contador className="alto" valor={exemplo.maior} />

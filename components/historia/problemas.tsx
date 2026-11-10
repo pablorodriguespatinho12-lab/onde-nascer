@@ -57,9 +57,10 @@ const LISTA: readonly Problema[] = [
 export default function Problemas() {
   return (
     <>
-      {LISTA.map((problema) => (
+      {LISTA.map((problema, i) => (
         <section className="passo" data-passo key={problema.titulo}>
           <div className="passo-texto">
+            <p className="rotulo">Problema {i + 1} de {LISTA.length}</p>
             <p className="numeros">
               <Contador className="alto" valor={problema.numero} />
             </p>
