@@ -3,8 +3,14 @@
 Quanto cada maternidade do Brasil faz de cesárea, com dados abertos do SUS.
 Projeto independente: não é site do governo e não é conselho médico.
 
+**Ver no ar:** https://pablorodriguespatinho12-lab.github.io/onde-nascer/
+
+![Abertura do site: a esfera de cubos enche de laranja até 57%, a parte das cesáreas feitas antes do trabalho de parto](docs/abertura.png)
+
+Rodar na sua máquina: `npm install` e `npm run dev`.
+
 ## Números (SINASC 2024)
-- 2.389.325 nascimentos lidos; 2.712 maternidades com 50+ partos, em 1.798 cidades.
+- 2.389.325 nascimentos lidos; 2.712 maternidades com 50+ partos, em 1.829 cidades.
 - Cesárea no Brasil: 61,3% no total; 47,8% em gestação de baixo risco (Robson 1 a 4).
 - Mediana por maternidade: 70,8%. Em baixo risco, 10% das maternidades ficam abaixo de 20% e 10% acima de 93%.
 - Abertura (todos os nascimentos): 57% das cesáreas antes do trabalho de parto; 38% das cesáreas com 37 ou 38 semanas (30% nos partos normais); 34% nascem fora da cidade da mãe; 20% com menos de 7 consultas de pré-natal.

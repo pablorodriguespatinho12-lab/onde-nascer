@@ -29,7 +29,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             Projeto independente, feito com dados abertos do Ministério da Saúde (SINASC e CNES). Não é um site do
             governo e não substitui a conversa com quem acompanha a sua gestação.
           </p>
-          <p>Feito por Pablo. Código aberto no GitHub.</p>
+          <p>
+            Feito por Pablo.{" "}
+            <a href="https://github.com/pablorodriguespatinho12-lab/onde-nascer" target="_blank" rel="noopener noreferrer">
+              Código aberto no GitHub
+            </a>
+          </p>
         </footer>
       </body>
     </html>

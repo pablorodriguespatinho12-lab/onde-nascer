@@ -4,6 +4,7 @@ import CursorVivo from "@/components/cursor-vivo";
 import Antes from "@/components/historia/antes";
 import Dados from "@/components/historia/dados";
 import Problemas from "@/components/historia/problemas";
+import Trilha from "@/components/trilha";
 import { FRACOES } from "@/lib/numeros";
 
 /** A ordem das seções com `data-passo` tem que bater com os quadros de lib/cena/quadros.ts. */
@@ -12,6 +13,7 @@ export default function Inicio() {
     <>
       <Cena3D fracoes={FRACOES} />
       <CursorVivo />
+      <Trilha />
       <main className="historia" data-historia>
         <section className="passo abertura" data-passo>
           <div className="passo-texto">

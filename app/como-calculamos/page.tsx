@@ -56,6 +56,12 @@ export default function ComoCalculamos() {
         de pré-natal informado. Nenhum deles diz o motivo de cada caso.
       </p>
       <p>
+        <strong>Como foi feito.</strong> Os dados são processados em Python. O site é Next.js exportado como páginas
+        estáticas. A cena 3D usa Three.js: os 2.712 cubos são desenhados de uma vez pela placa de vídeo. Fica no GitHub
+        Pages, com custo de R$ 0.{" "}
+        <a href="https://github.com/pablorodriguespatinho12-lab/onde-nascer" target="_blank" rel="noopener noreferrer">Ver o código</a>
+      </p>
+      <p>
         <strong>Formas da abertura.</strong> Em cada um dos 4 números, os cubos da cena tomam uma forma e a parte
         colorida segue a mesma proporção do número. Ali os cubos são só desenho: não representam maternidades.
       </p>
