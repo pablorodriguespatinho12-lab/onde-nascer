@@ -173,16 +173,25 @@ h2 { font-size: clamp(32px, 4vw, 52px); }
   .busca-painel { padding: 18px; }
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .cena canvas { transition: opacity 1.2s ease; }
-  .passo-texto { transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1); }
-  .botao { transition: transform 0.15s ease; }
-  .entra { animation: entrar 0.5s cubic-bezier(0.16, 1, 0.3, 1) both; animation-delay: calc(var(--i, 0) * 18ms); }
-  .barra-cheia { animation: crescer 0.9s cubic-bezier(0.16, 1, 0.3, 1) both; animation-delay: calc(var(--i, 0) * 18ms + 180ms); }
-  .uf, .cidades button, .escolhido button { transition: border-color 0.15s ease, background-color 0.15s ease, transform 0.15s ease; }
-  .campo { transition: border-color 0.15s ease; }
-  .luz div { transition: opacity 0.8s ease; will-change: transform; }
+/* Movimento: ligado por padrão. O botão "Pausar animação" põe data-movimento="parado" no <html> (lib/movimento.ts). */
+.cena canvas { transition: opacity 1.2s ease; }
+.passo-texto { transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1); }
+.botao { transition: transform 0.15s ease; }
+.entra { animation: entrar 0.5s cubic-bezier(0.16, 1, 0.3, 1) both; animation-delay: calc(var(--i, 0) * 18ms); }
+.barra-cheia { animation: crescer 0.9s cubic-bezier(0.16, 1, 0.3, 1) both; animation-delay: calc(var(--i, 0) * 18ms + 180ms); }
+.uf, .cidades button, .escolhido button, .botao-movimento { transition: border-color 0.15s ease, background-color 0.15s ease, transform 0.15s ease; }
+.campo { transition: border-color 0.15s ease; }
+.luz div { transition: opacity 0.8s ease; will-change: transform; }
+
+.botao-movimento {
+  position: fixed; right: var(--gutter); bottom: 14px; z-index: 3; padding: 8px 14px; border-radius: 999px; cursor: pointer;
+  font: inherit; font-size: 13px; color: var(--apagado); background: rgb(16 21 26 / 0.92); border: 1px solid var(--linha);
 }
-@media (prefers-reduced-motion: reduce) {
-  html { scroll-behavior: auto; }
-}
+.botao-movimento:hover { color: var(--tinta); border-color: var(--baixo); }
+.botao-movimento:focus { outline: none; }
+.botao-movimento:focus-visible { outline: 2px solid var(--tinta); outline-offset: 2px; }
+
+[data-movimento="parado"] { scroll-behavior: auto; }
+[data-movimento="parado"] *, [data-movimento="parado"] *::before, [data-movimento="parado"] *::after { animation: none !important; transition: none !important; }
+[data-movimento="parado"] .anima .passo-texto { opacity: 1; transform: none; }
+[data-movimento="parado"] .luz { display: none; }

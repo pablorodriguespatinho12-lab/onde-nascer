@@ -4,6 +4,7 @@ import { useEffect, useRef } from "react";
 import type { Cena } from "@/lib/cena/cena";
 import type { Fracoes } from "@/lib/cena/formas";
 import type { Historia } from "@/lib/cena/layouts";
+import { EVENTO_MOVIMENTO, estaParado } from "@/lib/movimento";
 
 export const EVENTO_FOCO = "onde-nascer:foco";
 
@@ -45,9 +46,9 @@ export default function Cena3D({ fracoes }: { fracoes: Fracoes }) {
     const raiz = document.querySelector<HTMLElement>("[data-historia]");
     if (!canvas || !raiz) return;
 
-    const semMovimento = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const comMouse = window.matchMedia("(pointer: fine)").matches;
-    const observadorTexto = semMovimento ? null : ativarEntradasDeTexto(raiz);
+    const observadorTexto = ativarEntradasDeTexto(raiz);
+    let parado = estaParado();
     let cena: Cena | null = null;
     let quadro = 0;
     let cancelado = false;
@@ -65,11 +66,17 @@ export default function Cena3D({ fracoes }: { fracoes: Fracoes }) {
       municipio = (e as CustomEvent<{ municipio: number | null }>).detail.municipio;
       cena?.focar(municipio);
     };
+    const aoPausar = (e: Event) => {
+      parado = (e as CustomEvent<{ parado: boolean }>).detail.parado;
+      cena?.pausar(parado);
+    };
     const aoApontar = (e: PointerEvent) => {
+      if (parado) return;
       cena?.apontar((e.clientX / window.innerWidth - 0.5) * 2, (0.5 - e.clientY / window.innerHeight) * 2);
     };
     window.addEventListener(EVENTO_FOCO, aoFocar);
-    if (comMouse && !semMovimento) window.addEventListener("pointermove", aoApontar, { passive: true });
+    window.addEventListener(EVENTO_MOVIMENTO, aoPausar);
+    if (comMouse) window.addEventListener("pointermove", aoApontar, { passive: true });
 
     const laco = (agora: number) => {
       cena?.desenhar(passoDaRolagem(centros), agora / 1000);
@@ -82,7 +89,7 @@ export default function Cena3D({ fracoes }: { fracoes: Fracoes }) {
       if (!resposta.ok) throw new Error(`historia.json respondeu ${resposta.status}`);
       const historia = (await resposta.json()) as Historia;
       if (cancelado) return;
-      cena = modulo.criarCena(canvas as HTMLCanvasElement, historia, fracoesRef.current, semMovimento);
+      cena = modulo.criarCena(canvas as HTMLCanvasElement, historia, fracoesRef.current, parado);
       cena.focar(municipio);
       canvas?.classList.add("pronta");
       quadro = requestAnimationFrame(laco);
@@ -96,7 +103,8 @@ export default function Cena3D({ fracoes }: { fracoes: Fracoes }) {
       cancelado = true;
       cancelAnimationFrame(quadro);
       remedir.disconnect();
-      observadorTexto?.disconnect();
+      observadorTexto.disconnect();
+      window.removeEventListener(EVENTO_MOVIMENTO, aoPausar);
       window.removeEventListener(EVENTO_FOCO, aoFocar);
       window.removeEventListener("pointermove", aoApontar);
       cena?.destruir();

@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Bricolage_Grotesque, DM_Sans } from "next/font/google";
 import Link from "next/link";
+import BotaoDeMovimento from "@/components/botao-de-movimento";
 import "./globals.css";
 
 const titulo = Bricolage_Grotesque({ subsets: ["latin"], variable: "--font-titulo", display: "swap" });
@@ -22,6 +23,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <Link href="/como-calculamos/">Como calculamos</Link>
         </nav>
         {children}
+        <BotaoDeMovimento />
         <footer className="rodape">
           <p>
             Projeto independente, feito com dados abertos do Ministério da Saúde (SINASC e CNES). Não é um site do

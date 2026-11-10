@@ -1,19 +1,20 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { estaParado } from "@/lib/movimento";
 
 const DURACAO_MS = 1100;
 const PARTE_VISIVEL = 0.6;
 
 type Props = { valor: number; sufixo?: string; className?: string };
 
-/** Número grande que conta de 0 até o valor quando entra na tela. Sem JavaScript ou com "reduzir movimento", já mostra o valor. */
+/** Número grande que conta de 0 até o valor quando entra na tela. Sem JavaScript ou com a animação pausada, já mostra o valor. */
 export default function Contador({ valor, sufixo = "%", className }: Props) {
   const ref = useRef<HTMLElement>(null);
 
   useEffect(() => {
     const el = ref.current;
-    if (!el || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (!el) return;
     let quadro = 0;
 
     const contar = (inicio: number) => (agora: number) => {
@@ -26,7 +27,7 @@ export default function Contador({ valor, sufixo = "%", className }: Props) {
     const observador = new IntersectionObserver(
       ([entrada]) => {
         cancelAnimationFrame(quadro);
-        if (entrada.isIntersecting) quadro = requestAnimationFrame(contar(performance.now()));
+        if (entrada.isIntersecting && !estaParado()) quadro = requestAnimationFrame(contar(performance.now()));
         else el.textContent = `${valor}${sufixo}`;
       },
       { threshold: PARTE_VISIVEL },

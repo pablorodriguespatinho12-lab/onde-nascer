@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { estaParado } from "@/lib/movimento";
 
 const VELOCIDADE = 7;
 const QUASE_PARADO = 0.0005;
@@ -8,7 +9,7 @@ const DT_MAXIMO_S = 0.1;
 
 /**
  * Uma luz suave segue o cursor.
- * Só liga com mouse de verdade e sem "reduzir movimento"; parado, não gasta nada.
+ * Só liga com mouse de verdade; com o cursor parado ou a animação pausada, não gasta nada.
  */
 export default function CursorVivo() {
   const luzRef = useRef<HTMLDivElement>(null);
@@ -16,8 +17,7 @@ export default function CursorVivo() {
   useEffect(() => {
     const luz = luzRef.current;
     const temMouse = window.matchMedia("(pointer: fine)").matches;
-    const semMovimento = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (!luz || !temMouse || semMovimento) return;
+    if (!luz || !temMouse) return;
 
     let alvoX = 0;
     let alvoY = 0;
@@ -44,6 +44,7 @@ export default function CursorVivo() {
     };
 
     const aoMover = (e: PointerEvent) => {
+      if (estaParado()) return;
       alvoX = (e.clientX / window.innerWidth - 0.5) * 2;
       alvoY = (0.5 - e.clientY / window.innerHeight) * 2;
       luz.classList.add("acesa");

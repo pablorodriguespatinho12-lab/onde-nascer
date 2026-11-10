@@ -1,4 +1,4 @@
-/** A cena 3D: um único desenho de 2.712 cubos, sempre em movimento (gira e ondula sozinha). Com "reduzir movimento", só desenha quando algo muda. */
+/** A cena 3D: um único desenho de 2.712 cubos, sempre em movimento (gira e ondula sozinha). Pausada pelo botão, só desenha quando algo muda. */
 import {
   BoxGeometry,
   InstancedBufferAttribute,
@@ -22,6 +22,8 @@ export type Cena = {
   desenhar: (passoAlvo: number, tempo: number) => void;
   focar: (municipio: number | null) => void;
   apontar: (x: number, y: number) => void;
+  /** Parada, a cena só acompanha a rolagem, sem giro, onda nem suavização. */
+  pausar: (parado: boolean) => void;
   destruir: () => void;
 };
 
@@ -104,7 +106,8 @@ function comCidade(q: Quadro, passo: number, mistura: number, cidade: Vector3): 
   };
 }
 
-export function criarCena(canvas: HTMLCanvasElement, historia: Historia, fracoes: Fracoes, semMovimento: boolean): Cena {
+export function criarCena(canvas: HTMLCanvasElement, historia: Historia, fracoes: Fracoes, comecaParada: boolean): Cena {
+  let semMovimento = comecaParada;
   const densidade = window.devicePixelRatio || 1;
   const renderizador = new WebGLRenderer({ canvas, antialias: densidade < ESCALA_MAXIMA, alpha: false, powerPreference: "high-performance" });
   renderizador.setClearColor(COR_FUNDO, 1);
@@ -283,6 +286,7 @@ export function criarCena(canvas: HTMLCanvasElement, historia: Historia, fracoes
     ajustar,
     desenhar,
     apontar,
+    pausar: (parado) => { semMovimento = parado; precisaDesenhar = true; },
     destruir,
     focar: (municipio) => { municipioEscolhido = municipio; precisaDesenhar = true; },
   };
