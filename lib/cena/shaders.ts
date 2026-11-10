@@ -7,7 +7,17 @@ export const VERTICE = /* glsl */ `
   attribute float aTaxa;
   attribute float aSemente;
   attribute float aFoco;
+  attribute vec3 aAneis;
+  attribute vec3 aSatelite;
+  attribute vec3 aGrade;
+  attribute vec4 aAceso;
 
+  uniform float uNivel;
+  uniform float uAneis;
+  uniform float uSatelite;
+  uniform float uGrade;
+  uniform float uTempo;
+  uniform float uVida;
   uniform float uMapa;
   uniform float uTorre;
   uniform float uHistograma;
@@ -23,7 +33,13 @@ export const VERTICE = /* glsl */ `
   varying float vFoco;
   varying float vProfundidade;
   varying float vPerto;
+  varying float vAceso;
+  varying float vForma;
 
+  const vec3 CENTRO_DA_MAIOR = vec3(-9.0, -6.0, 0.0);
+  const vec3 CENTRO_DA_MENOR = vec3(20.0, 13.0, 0.0);
+  const float BALANCO_DA_GRADE = 0.32;
+  const float RESPIRO = 0.022;
   const float ALTURA_MAXIMA = 15.0;
   const float RAIO_MOUSE = 0.34;
   const float EMPURRAO_MOUSE = 0.07;
@@ -45,7 +61,19 @@ export const VERTICE = /* glsl */ `
     float noHistograma = onda(uHistograma);
     float crescimento = onda(uTorre);
 
-    vec3 centro = mix(mix(girar(aEsfera, uGiro), aMapa, noMapa), aHistograma, noHistograma);
+    float noNivel = onda(uNivel);
+    float nosAneis = onda(uAneis);
+    float noSatelite = onda(uSatelite);
+    float naGrade = onda(uGrade);
+
+    // Antes do mapa os cubos ficam soltos: esfera, anéis, duas esferas ou a grade de 100 pontos.
+    vec3 solto = girar(aEsfera, uGiro);
+    solto = mix(solto, girar(aAneis, uGiro), nosAneis);
+    solto = mix(solto, girar(aSatelite, uGiro) + mix(CENTRO_DA_MAIOR, CENTRO_DA_MENOR, abs(aAceso.z)), noSatelite);
+    solto = mix(solto, girar(aGrade, sin(uTempo * 0.5) * BALANCO_DA_GRADE), naGrade);
+    solto *= 1.0 + sin(uTempo * 0.9 + aSemente * 6.2832) * RESPIRO * uVida;
+
+    vec3 centro = mix(mix(solto, aMapa, noMapa), aHistograma, noHistograma);
 
     float temTaxa = step(0.0, aTaxa);
     float alturaTorre = mix(0.14, 0.14 + max(aTaxa, 0.0) * ALTURA_MAXIMA, crescimento * temTaxa);
@@ -72,6 +100,8 @@ export const VERTICE = /* glsl */ `
     vFoco = aFoco;
     vProfundidade = -mundo.z;
     vPerto = perto;
+    vAceso = clamp(aAceso.x * noNivel + aAceso.y * nosAneis + aAceso.z * noSatelite + aAceso.w * naGrade, -1.0, 1.0);
+    vForma = max(max(noNivel, nosAneis), max(noSatelite, naGrade));
     gl_Position = projectionMatrix * mundo;
   }
 `;
@@ -82,7 +112,6 @@ export const FRAGMENTO = /* glsl */ `
   uniform float uCor;
   uniform float uExtremos;
   uniform float uFoco;
-  uniform float uBrilho;
   uniform float uPerto;
   uniform float uLonge;
   uniform float uSombra;
@@ -94,7 +123,11 @@ export const FRAGMENTO = /* glsl */ `
   varying float vFoco;
   varying float vProfundidade;
   varying float vPerto;
+  varying float vAceso;
+  varying float vForma;
 
+  const float APAGA_O_RESTO = 0.62;
+  const float BRILHO_DO_ACESO = 0.18;
   const vec3 NEUTRO = vec3(0.86, 0.88, 0.90);
   const vec3 BAIXO = vec3(0.14, 0.82, 0.72);
   const vec3 MEIO = vec3(0.95, 0.88, 0.70);
@@ -109,11 +142,13 @@ export const FRAGMENTO = /* glsl */ `
 
   void main() {
     vec3 dado = vTaxa < 0.0 ? SEM_DADO : corDaTaxa(vTaxa);
-    vec3 cor = mix(NEUTRO, dado, uCor);
+    float aceso = abs(vAceso);
+    vec3 cor = mix(mix(NEUTRO, dado, uCor), vAceso > 0.0 ? ALTO : BAIXO, aceso);
 
     float luz = 0.42 + 0.58 * max(dot(normalize(vNormal), normalize(LUZ)), 0.0);
     float topo = pow(vAltura, 3.0) * 0.45 * uCor;
-    vec3 acesa = cor * (luz + topo);
+    vec3 acesa = cor * (luz + topo + aceso * BRILHO_DO_ACESO);
+    acesa *= 1.0 - vForma * (1.0 - aceso) * APAGA_O_RESTO;
 
     float nosExtremos = step(vTaxa, 0.2) + step(0.93, vTaxa);
     float apagar = uExtremos * (1.0 - clamp(nosExtremos, 0.0, 1.0)) * 0.88;
@@ -125,8 +160,6 @@ export const FRAGMENTO = /* glsl */ `
 
     float neblina = smoothstep(uPerto, uLonge, vProfundidade);
     vec3 final = mix(acesa, FUNDO, neblina * (1.0 - uFoco * vFoco));
-
-    final = mix(FUNDO, final, clamp(uBrilho + vPerto * 0.85, 0.0, 1.0));
 
     float sombraEsquerda = smoothstep(0.0, uLarguraTela * 0.46, gl_FragCoord.x);
     gl_FragColor = vec4(mix(final, FUNDO, uSombra * (1.0 - sombraEsquerda) * 0.82), 1.0);

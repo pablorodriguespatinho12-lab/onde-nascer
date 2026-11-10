@@ -17,7 +17,7 @@ Projeto independente: não é site do governo e não é conselho médico.
 4. `dados/gerar_historia.py` junta as maternidades às coordenadas das cidades ([kelvins/municipios-brasileiros](https://github.com/kelvins/municipios-brasileiros), salvo em `dados/bruto/municipios.csv`) e gera `public/historia.json` (21 KB comprimido).
 5. A abertura é uma cena em Three.js: 2.712 cubos, um por maternidade, viram esfera, mapa, torres e histograma conforme a rolagem. A posição é calculada na placa de vídeo, e os 128 KB comprimidos do 3D só carregam depois da página.
 
-6. A abertura conta 4 problemas com ilustrações geradas por IA (`public/imagens/`, WebP de 22 a 34 KB, convertidas por `node dados/otimizar_imagens.mjs <originais> public/imagens`). Luz, cubos e imagens reagem ao cursor.
+6. A abertura conta 4 problemas. Em cada um, os cubos tomam uma forma em que a parte colorida tem a proporção do número (`lib/cena/formas.ts`): esfera que enche, dois anéis, esfera menor que se solta e grade de 100 pontos. A cena gira sozinha nessas formas e para no mapa; luz e cubos reagem ao cursor.
 
 Custo para rodar: R$ 0 (site estático, sem servidor nem banco).
 

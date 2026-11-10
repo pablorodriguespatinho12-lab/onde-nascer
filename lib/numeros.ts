@@ -22,6 +22,15 @@ export const PROBLEMAS = {
   menosDe7Consultas: porcento(p.menos_de_7_consultas, p.com_consultas),
 };
 
+/** As mesmas contas dos 4 problemas, sem arredondar: é a parte dos cubos que acende em cada forma da cena 3D. */
+export const FRACOES = {
+  nivel: p.ces_antes_do_trabalho / p.ces_com_inicio,
+  anelDeFora: p.ces_37_38 / p.ces_com_semanas,
+  anelDeDentro: p.vag_37_38 / p.vag_com_semanas,
+  satelite: p.fora_da_cidade / p.com_cidades,
+  grade: p.menos_de_7_consultas / p.com_consultas,
+};
+
 export const MATERNIDADES = {
   total: historia.total,
   semTaxa: historia.total - historia.comTaxa,

@@ -56,8 +56,8 @@ export default function ComoCalculamos() {
         de pré-natal informado. Nenhum deles diz o motivo de cada caso.
       </p>
       <p>
-        <strong>Ilustrações.</strong> As imagens da página foram geradas por inteligência artificial e não retratam
-        pessoas reais.
+        <strong>Formas da abertura.</strong> Em cada um dos 4 números, os cubos da cena tomam uma forma e a parte
+        colorida segue a mesma proporção do número. Ali os cubos são só desenho: não representam maternidades.
       </p>
       <p>
         <strong>Gêmeos.</strong> O SINASC conta cada bebê que nasce, então um parto de gêmeos conta duas vezes. O

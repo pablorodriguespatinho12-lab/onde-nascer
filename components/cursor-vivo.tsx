@@ -7,7 +7,7 @@ const QUASE_PARADO = 0.0005;
 const DT_MAXIMO_S = 0.1;
 
 /**
- * Uma luz suave segue o cursor e cada elemento com `data-cursor` recebe --px e --py (de -1 a 1).
+ * Uma luz suave segue o cursor.
  * Só liga com mouse de verdade e sem "reduzir movimento"; parado, não gasta nada.
  */
 export default function CursorVivo() {
@@ -30,10 +30,6 @@ export default function CursorVivo() {
       const px = (x * 0.5 + 0.5) * window.innerWidth;
       const py = (0.5 - y * 0.5) * window.innerHeight;
       luz.style.transform = `translate3d(${px}px, ${py}px, 0)`;
-      document.querySelectorAll<HTMLElement>("[data-cursor]").forEach((el) => {
-        el.style.setProperty("--px", x.toFixed(4));
-        el.style.setProperty("--py", y.toFixed(4));
-      });
     };
 
     const laco = (agora: number) => {

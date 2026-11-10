@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import type { Cena } from "@/lib/cena/cena";
+import type { Fracoes } from "@/lib/cena/formas";
 import type { Historia } from "@/lib/cena/layouts";
 
 export const EVENTO_FOCO = "onde-nascer:foco";
@@ -35,8 +36,9 @@ function ativarEntradasDeTexto(raiz: HTMLElement): IntersectionObserver {
 }
 
 /** Sem suporte a 3D, a página continua inteira: só o fundo fica parado. Parada, a cena não gasta a placa de vídeo. */
-export default function Cena3D() {
+export default function Cena3D({ fracoes }: { fracoes: Fracoes }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const fracoesRef = useRef(fracoes);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -80,7 +82,7 @@ export default function Cena3D() {
       if (!resposta.ok) throw new Error(`historia.json respondeu ${resposta.status}`);
       const historia = (await resposta.json()) as Historia;
       if (cancelado) return;
-      cena = modulo.criarCena(canvas as HTMLCanvasElement, historia, semMovimento);
+      cena = modulo.criarCena(canvas as HTMLCanvasElement, historia, fracoesRef.current, semMovimento);
       cena.focar(municipio);
       canvas?.classList.add("pronta");
       quadro = requestAnimationFrame(laco);

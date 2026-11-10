@@ -1,4 +1,4 @@
-/** A cena 3D: um único desenho de 2.712 cubos. Só desenha de novo quando algo se move. */
+/** A cena 3D: um único desenho de 2.712 cubos. Gira sozinha nas formas soltas; no mapa, só desenha quando algo se move. */
 import {
   BoxGeometry,
   InstancedBufferAttribute,
@@ -11,6 +11,7 @@ import {
   Vector3,
   WebGLRenderer,
 } from "three";
+import { type Fracoes, montarFormas } from "./formas";
 import { type Historia, montarLayouts, posicaoNoMapa } from "./layouts";
 import { criarQualidade } from "./qualidade";
 import { ALTURA_ALVO_CIDADE, CENA_CIDADE, OFFSET_CIDADE, type Quadro, montarQuadros, quadroEm } from "./quadros";
@@ -39,6 +40,8 @@ const PARALAXE = 2.4;
 const GIRO_POR_PASSO = 2.2;
 const GIRO_POR_MOUSE = 1.1;
 const GIRO_DE_ENTRADA = 1.4;
+/** Radianos por segundo: uma volta a cada 24 s, mais ou menos. */
+const GIRO_SOZINHO = 0.26;
 const MOUSE_PARADO_S = 0.16;
 const TELA_LARGA = 900;
 const NEBLINA_INICIO = 1;
@@ -49,7 +52,7 @@ function amortecer(atual: number, alvo: number, velocidade: number, dt: number):
   return alvo + (atual - alvo) * Math.exp(-velocidade * dt);
 }
 
-function montarGeometria(historia: Historia): { geometria: InstancedBufferGeometry; alturaHistograma: number; foco: InstancedBufferAttribute } {
+function montarGeometria(historia: Historia, fracoes: Fracoes): { geometria: InstancedBufferGeometry; alturaHistograma: number; foco: InstancedBufferAttribute } {
   const caixa = new BoxGeometry(1, 1, 1);
   caixa.translate(0, 0.5, 0);
   const geometria = new InstancedBufferGeometry();
@@ -64,13 +67,18 @@ function montarGeometria(historia: Historia): { geometria: InstancedBufferGeomet
   geometria.setAttribute("aHistograma", new InstancedBufferAttribute(layouts.histograma, 3));
   geometria.setAttribute("aTaxa", new InstancedBufferAttribute(layouts.taxa, 1));
   geometria.setAttribute("aSemente", new InstancedBufferAttribute(layouts.semente, 1));
+  const formas = montarFormas(historia.pontos.length, fracoes);
+  geometria.setAttribute("aAneis", new InstancedBufferAttribute(formas.aneis, 3));
+  geometria.setAttribute("aSatelite", new InstancedBufferAttribute(formas.satelite, 3));
+  geometria.setAttribute("aGrade", new InstancedBufferAttribute(formas.grade, 3));
+  geometria.setAttribute("aAceso", new InstancedBufferAttribute(formas.aceso, 4));
   const foco = new InstancedBufferAttribute(new Float32Array(historia.pontos.length), 1);
   geometria.setAttribute("aFoco", foco);
   return { geometria, alturaHistograma: layouts.alturaHistograma, foco };
 }
 
 function montarMaterial(): ShaderMaterial {
-  const numeros = ["uMapa", "uTorre", "uHistograma", "uGiro", "uFoco", "uBrilho", "uCor", "uExtremos", "uForca", "uAspecto", "uPerto", "uLonge", "uSombra", "uLarguraTela"];
+  const numeros = ["uMapa", "uTorre", "uHistograma", "uGiro", "uFoco", "uNivel", "uAneis", "uSatelite", "uGrade", "uTempo", "uVida", "uCor", "uExtremos", "uForca", "uAspecto", "uPerto", "uLonge", "uSombra", "uLarguraTela"];
   return new ShaderMaterial({
     vertexShader: VERTICE,
     fragmentShader: FRAGMENTO,
@@ -96,13 +104,13 @@ function comCidade(q: Quadro, passo: number, mistura: number, cidade: Vector3): 
   };
 }
 
-export function criarCena(canvas: HTMLCanvasElement, historia: Historia, semMovimento: boolean): Cena {
+export function criarCena(canvas: HTMLCanvasElement, historia: Historia, fracoes: Fracoes, semMovimento: boolean): Cena {
   const densidade = window.devicePixelRatio || 1;
   const renderizador = new WebGLRenderer({ canvas, antialias: densidade < ESCALA_MAXIMA, alpha: false, powerPreference: "high-performance" });
   renderizador.setClearColor(COR_FUNDO, 1);
   const cena = new Scene();
   const camera = new PerspectiveCamera(CAMPO_DE_VISAO, 1, 1, 400);
-  const { geometria, alturaHistograma, foco } = montarGeometria(historia);
+  const { geometria, alturaHistograma, foco } = montarGeometria(historia, fracoes);
   const material = montarMaterial();
   const malha = new Mesh(geometria, material);
   malha.frustumCulled = false;
@@ -120,6 +128,8 @@ export function criarCena(canvas: HTMLCanvasElement, historia: Historia, semMovi
   let passo = 0;
   let giro = semMovimento ? 0 : -GIRO_DE_ENTRADA;
   let giroMouse = 0;
+  let giroSozinho = 0;
+  let relogio = 0;
   let ultimoTempo = 0;
   let ultimoDesenho = 0;
   let municipioEscolhido: number | null = null;
@@ -187,7 +197,12 @@ export function criarCena(canvas: HTMLCanvasElement, historia: Historia, semMovi
     u.uCor.value = q.cor;
     u.uExtremos.value = q.extremos;
     u.uFoco.value = q.foco;
-    u.uBrilho.value = q.brilho;
+    u.uNivel.value = q.nivel;
+    u.uAneis.value = q.aneis;
+    u.uSatelite.value = q.satelite;
+    u.uGrade.value = q.grade;
+    u.uVida.value = semMovimento ? 0 : q.vida;
+    u.uTempo.value = relogio;
     u.uGiro.value = giro;
     u.uForca.value = forca;
     (u.uMouse.value as Vector2).set(mouseAlvoX, mouseAlvoY);
@@ -200,15 +215,19 @@ export function criarCena(canvas: HTMLCanvasElement, historia: Historia, semMovi
       ultimoMovimento = tempo;
       movimentoRecente = false;
     }
-    const antes = [passo, giro, misturaCidade, forca, mouseX, mouseY];
+    const antes = [passo, giro, misturaCidade, forca, mouseX, mouseY, relogio];
     const escolheu = Number(municipioEscolhido !== null);
     passo = semMovimento ? passoAlvo : amortecer(passo, passoAlvo, VELOCIDADE_ROLAGEM, dt);
     misturaCidade = semMovimento ? escolheu : amortecer(misturaCidade, escolheu, VELOCIDADE_CIDADE, dt);
-    giro = semMovimento ? passo * GIRO_POR_PASSO : amortecer(giro, passo * GIRO_POR_PASSO + giroMouse, VELOCIDADE_GIRO, dt);
+    // O relógio só anda nas formas soltas: no mapa e nas torres a cena para e não gasta a placa de vídeo.
+    const vida = semMovimento ? 0 : quadroEm(quadros, passo).vida;
+    relogio += dt * vida;
+    giroSozinho += dt * vida * GIRO_SOZINHO;
+    giro = semMovimento ? passo * GIRO_POR_PASSO : amortecer(giro, passo * GIRO_POR_PASSO + giroMouse + giroSozinho, VELOCIDADE_GIRO, dt);
     forca = amortecer(forca, tempo - ultimoMovimento < MOUSE_PARADO_S ? 1 : 0, VELOCIDADE_FORCA, dt);
     mouseX = amortecer(mouseX, mouseAlvoX, VELOCIDADE_MOUSE, dt);
     mouseY = amortecer(mouseY, mouseAlvoY, VELOCIDADE_MOUSE, dt);
-    const depois = [passo, giro, misturaCidade, forca, mouseX, mouseY];
+    const depois = [passo, giro, misturaCidade, forca, mouseX, mouseY, relogio];
     return depois.reduce((soma, valor, i) => soma + Math.abs(valor - antes[i]), 0);
   }
 

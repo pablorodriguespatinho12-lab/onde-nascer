@@ -1,5 +1,4 @@
 import Link from "next/link";
-import ImagemViva from "@/components/imagem-viva";
 import { BRASIL, milhar } from "@/lib/numeros";
 
 const LINK_LEI = "https://www.planalto.gov.br/ccivil_03/_ato2004-2006/2005/lei/l11108.htm";
@@ -8,10 +7,6 @@ export default function Antes() {
   return (
     <section className="antes">
       <div className="antes-conteudo">
-        <ImagemViva
-          arquivo="proposito"
-          descricao="Ilustração: gestante segura uma lanterna que ilumina três caminhos, cada um levando a um prédio diferente."
-        />
         <div className="antes-texto">
           <h2>Antes de escolher.</h2>
           <div className="antes-grade">

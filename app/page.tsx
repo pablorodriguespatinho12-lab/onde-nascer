@@ -4,13 +4,13 @@ import CursorVivo from "@/components/cursor-vivo";
 import Antes from "@/components/historia/antes";
 import Dados from "@/components/historia/dados";
 import Problemas from "@/components/historia/problemas";
-import ImagemViva from "@/components/imagem-viva";
+import { FRACOES } from "@/lib/numeros";
 
 /** A ordem das seções com `data-passo` tem que bater com os quadros de lib/cena/quadros.ts. */
 export default function Inicio() {
   return (
     <>
-      <Cena3D />
+      <Cena3D fracoes={FRACOES} />
       <CursorVivo />
       <main className="historia" data-historia>
         <section className="passo abertura" data-passo>
@@ -19,11 +19,6 @@ export default function Inicio() {
             <p>Veja quanto cada maternidade da sua cidade faz de cesárea, com dados reais de 2024.</p>
             <a className="botao" href="#busca">Ver minha cidade</a>
           </div>
-          <ImagemViva
-            arquivo="abertura"
-            descricao="Ilustração: gestante de perfil, com a mão na barriga, olha as luzes de uma cidade à noite."
-            prioridade
-          />
         </section>
 
         <Problemas />

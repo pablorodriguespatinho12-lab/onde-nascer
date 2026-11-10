@@ -9,40 +9,45 @@ export type Quadro = {
   cor: number;
   extremos: number;
   foco: number;
-  /** 1 = cubos acesos; perto de 0 eles viram um fundo discreto atrás das ilustrações. */
-  brilho: number;
+  /** As 4 formas dos problemas (lib/cena/formas.ts): 1 = os cubos estão nela. */
+  nivel: number;
+  aneis: number;
+  satelite: number;
+  grade: number;
+  /** 1 = a cena gira e respira sozinha, mesmo sem rolar a página. */
+  vida: number;
   camera: Vetor;
   alvo: Vetor;
-  /** 1 empurra a imagem para longe do texto: direita no computador, cima no celular. */
+  /** 1 empurra a cena para longe do texto: direita no computador, cima no celular. */
   deslocamento: number;
   /** 1 afasta tudo em tela estreita para caber; 0 mantém o zoom. */
   ajusteCelular: number;
 };
 
-const CAMPOS = ["mapa", "torre", "histograma", "cor", "extremos", "foco", "brilho", "deslocamento", "ajusteCelular"] as const;
+const CAMPOS = ["mapa", "torre", "histograma", "cor", "extremos", "foco", "nivel", "aneis", "satelite", "grade", "vida", "deslocamento", "ajusteCelular"] as const;
 
 /** Índice do quadro que aproxima a câmera da cidade de exemplo. */
 export const CENA_CIDADE = 9;
 export const OFFSET_CIDADE: Vetor = [13, 21, 27];
 export const ALTURA_ALVO_CIDADE = 5;
-const BRILHO_DE_FUNDO = 0.2;
 
 export function montarQuadros(alturaHistograma: number, cidade: readonly [number, number]): readonly Quadro[] {
   const meio = alturaHistograma / 2;
   const [cx, cz] = cidade;
-  const base = { mapa: 1, torre: 0, histograma: 0, cor: 0, extremos: 0, foco: 0, brilho: 1, deslocamento: 1, ajusteCelular: 1 };
-  const fundo = { ...base, mapa: 0, brilho: BRILHO_DE_FUNDO, deslocamento: 0, ajusteCelular: 0 };
+  const base = { mapa: 1, torre: 0, histograma: 0, cor: 0, extremos: 0, foco: 0, nivel: 0, aneis: 0, satelite: 0, grade: 0, vida: 0, deslocamento: 1, ajusteCelular: 1 };
+  const solto = { ...base, mapa: 0, vida: 1, alvo: [0, 0, 0] as const };
   const torres = { ...base, torre: 1, cor: 1 };
   const grafico = { ...torres, histograma: 1 };
   return [
-    // Abertura e os 4 problemas: a esfera fica ao fundo, quase apagada, e só acende perto do cursor.
-    { ...fundo, brilho: 0.28, camera: [0, 3, 96], alvo: [0, 0, 0] },
-    { ...fundo, camera: [-10, 8, 92], alvo: [0, 0, 0] },
-    { ...fundo, camera: [8, -6, 100], alvo: [0, 0, 0] },
-    { ...fundo, camera: [-6, 12, 96], alvo: [0, 0, 0] },
-    { ...fundo, camera: [10, 4, 90], alvo: [0, 0, 0] },
+    // Abertura: a esfera girando.
+    { ...solto, camera: [0, 6, 96] },
+    // Os 4 problemas, na ordem de components/historia/problemas.tsx. Os anéis são vistos de cima.
+    { ...solto, nivel: 1, camera: [-10, 10, 92] },
+    { ...solto, aneis: 1, camera: [0, 58, 82] },
+    { ...solto, satelite: 1, camera: [0, 4, 112] },
+    { ...solto, grade: 1, camera: [0, 0, 104] },
     // Propósito: as maternidades acendem.
-    { ...base, mapa: 0, camera: [-20, 30, 74], alvo: [0, 0, 0] },
+    { ...solto, camera: [-20, 30, 74] },
     { ...base, camera: [0, 66, 9], alvo: [0, 0, 0] },
     { ...torres, camera: [30, 27, 52], alvo: [3, 3, 0] },
     { ...grafico, extremos: 1, camera: [-15, meio + 9, 61], alvo: [0, meio, 0] },

@@ -54,40 +54,16 @@ h2 { font-size: clamp(32px, 4vw, 52px); }
 }
 .luz div.acesa { opacity: 1; }
 
-/* Ilustração que inclina com o cursor (--px e --py vão de -1 a 1) */
-.imagem-viva {
-  position: relative; margin: 0; flex: none; aspect-ratio: 3 / 4; overflow: hidden; border-radius: var(--raio);
-  background: var(--painel); box-shadow: 0 40px 90px -40px rgb(0 0 0 / 0.9), inset 0 0 0 1px rgb(255 255 255 / 0.06);
-  transform: perspective(1100px) rotateY(calc(var(--px, 0) * 7deg)) rotateX(calc(var(--py, 0) * 6deg));
-}
-.imagem-viva img {
-  display: block; width: 100%; height: 100%; object-fit: cover;
-  transform: scale(1.1) translate(calc(var(--px, 0) * -2.4%), calc(var(--py, 0) * 2.4%));
-}
-.imagem-viva::after {
-  content: ""; position: absolute; inset: 0; pointer-events: none; border-radius: inherit;
-  background: radial-gradient(circle at calc(50% + var(--px, 0) * 45%) calc(50% - var(--py, 0) * 45%), rgb(255 255 255 / 0.16), rgb(255 255 255 / 0) 55%);
-  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.06);
-}
-
 /* História */
 .historia { position: relative; z-index: 1; }
 .passo {
   min-height: 125svh; display: flex; align-items: center;
   padding: 96px var(--gutter); max-width: 1400px; margin: 0 auto;
 }
-.passo.abertura { min-height: 100svh; justify-content: space-between; gap: 48px; }
-.abertura .imagem-viva { height: min(72svh, 680px); }
-
-/* Os 4 problemas: a ilustração fica parada e os textos passam */
-.problemas { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 48px; max-width: 1400px; margin: 0 auto; padding: 0 var(--gutter); }
-.palco { grid-column: 2; grid-row: 1; position: sticky; top: 0; height: 100svh; display: grid; place-items: center; }
-.palco .imagem-viva { grid-area: 1 / 1; height: min(72svh, 680px); opacity: 0; scale: 0.94; }
-.palco .imagem-viva.ativa { opacity: 1; scale: 1; }
-.palco .imagem-viva.ativa img { scale: 1.07; }
-.trilho { grid-column: 1; grid-row: 1; }
-.trilho .passo { min-height: 110svh; padding-left: 0; padding-right: 0; }
+.passo.abertura { min-height: 100svh; }
 .ressalva { font-size: 15px !important; }
+/* Legenda da forma que os cubos fazem ao lado */
+.desenho { font-size: 15px !important; padding-left: 12px; border-left: 2px solid var(--alto); color: var(--tinta) !important; }
 .passo-texto {
   display: flex; flex-direction: column; gap: 16px; width: 100%; max-width: 460px; padding: 22px;
   border-radius: var(--raio); background: rgb(7 10 13 / 0.82);
@@ -110,7 +86,7 @@ h2 { font-size: clamp(32px, 4vw, 52px); }
 
 /* Depois da busca: fundo sólido, a cena fica para trás */
 .antes { position: relative; background: var(--painel); border-top: 1px solid var(--linha); margin-top: 72px; }
-.antes-conteudo { max-width: 1400px; margin: 0 auto; padding: 72px var(--gutter); display: grid; grid-template-columns: minmax(0, 320px) minmax(0, 1fr); gap: 64px; align-items: start; }
+.antes-conteudo { max-width: 1400px; margin: 0 auto; padding: 72px var(--gutter); }
 .antes-texto { display: flex; flex-direction: column; gap: 36px; }
 .antes-grade { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: 32px 48px; }
 .antes-grade h3 { font-family: var(--font-titulo), system-ui, sans-serif; font-size: 22px; letter-spacing: -0.015em; margin: 0 0 8px; }
@@ -164,21 +140,12 @@ select:focus-visible { outline: 2px solid var(--tinta); outline-offset: 2px; }
   .passo-texto p { color: #c3ccd4; }
 }
 
-/* Celular: o texto fica na metade de baixo e a imagem sobe */
+/* Celular: o texto fica na metade de baixo e a cena sobe */
 @media (max-width: 899px) {
   .passo-texto { margin-top: 34svh; }
   .busca-secao { padding-top: 48svh; }
   .passo.abertura { flex-direction: column; justify-content: flex-end; align-items: stretch; gap: 20px; padding-top: 80px; padding-bottom: 32px; }
   .abertura .passo-texto { margin-top: 0; }
-  .abertura .imagem-viva { order: -1; align-self: center; height: 40svh; }
-  .problemas { grid-template-columns: minmax(0, 1fr); gap: 0; }
-  .palco { grid-column: 1; grid-row: 1; z-index: 2; height: 48svh; padding-top: 72px; background: linear-gradient(to bottom, var(--bg) 88%, rgb(7 10 13 / 0)); }
-  .palco .imagem-viva { height: calc(48svh - 96px); }
-  .trilho { grid-row: 2; }
-  .trilho .passo { align-items: flex-start; padding-top: 52svh; padding-bottom: 0; }
-  .trilho .passo-texto { margin-top: 0; }
-  .antes-conteudo { grid-template-columns: minmax(0, 1fr); gap: 36px; }
-  .antes .imagem-viva { width: min(100%, 300px); }
   .passo-texto, .abertura .passo-texto { max-width: none; }
   .busca-painel { padding: 18px; }
 }
@@ -189,8 +156,6 @@ select:focus-visible { outline: 2px solid var(--tinta); outline-offset: 2px; }
   .barra-cheia { transition: width 0.4s ease; }
   .botao { transition: transform 0.15s ease; }
   .luz div { transition: opacity 0.8s ease; will-change: transform; }
-  .palco .imagem-viva { transition: opacity 0.7s ease, scale 0.9s cubic-bezier(0.16, 1, 0.3, 1); }
-  .palco .imagem-viva img { transition: scale 7s ease-out; }
 }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }

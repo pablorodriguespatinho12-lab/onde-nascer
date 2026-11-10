@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Contador from "@/components/contador";
 import { BRASIL, MATERNIDADES, milhar } from "@/lib/numeros";
 
 const LINK_OMS = "https://www.who.int/news/item/09-04-2015-caesarean-sections-should-only-be-performed-when-medically-necessary";
@@ -28,8 +29,8 @@ export default function Dados() {
       <section className="passo" data-passo>
         <div className="passo-texto">
           <p className="numeros">
-            <strong className="alto">{BRASIL.geral}%</strong>
-            <strong className="meio">{BRASIL.baixoRisco}%</strong>
+            <Contador className="alto" valor={BRASIL.geral} />
+            <Contador className="meio" valor={BRASIL.baixoRisco} />
           </p>
           <h2>Altura é cesárea.</h2>
           <p>
@@ -49,8 +50,8 @@ export default function Dados() {
       <section className="passo" data-passo>
         <div className="passo-texto">
           <p className="numeros">
-            <strong className="baixo">{MATERNIDADES.abaixoDe}%</strong>
-            <strong className="alto">{MATERNIDADES.acimaDe}%</strong>
+            <Contador className="baixo" valor={MATERNIDADES.abaixoDe} />
+            <Contador className="alto" valor={MATERNIDADES.acimaDe} />
           </p>
           <h2>A distância entre as pontas.</h2>
           <p>
@@ -67,8 +68,8 @@ export default function Dados() {
       <section className="passo" data-passo>
         <div className="passo-texto">
           <p className="numeros">
-            <strong className="baixo">{exemplo.menor}%</strong>
-            <strong className="alto">{exemplo.maior}%</strong>
+            <Contador className="baixo" valor={exemplo.menor} />
+            <Contador className="alto" valor={exemplo.maior} />
           </p>
           <h2>Na mesma cidade.</h2>
           <p>

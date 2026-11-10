@@ -27,8 +27,8 @@ export type Layouts = {
 const CENTRO_LONGITUDE = -52;
 const CENTRO_LATITUDE = -14.5;
 const CORRECAO_LONGITUDE = 0.96; // cos(15°): evita o Brasil achatado sem projeção completa
-const RAIO_ESFERA = 21;
-const ANGULO_DOURADO = Math.PI * (3 - Math.sqrt(5));
+export const RAIO_ESFERA = 21;
+export const ANGULO_DOURADO = Math.PI * (3 - Math.sqrt(5));
 const ESPIRAL_NA_CIDADE = 0.24;
 const PERCENTUAL_TOTAL = 100;
 const LADO_COLUNA = 0.74;
@@ -39,14 +39,17 @@ export function posicaoNoMapa(longitude: number, latitude: number): [number, num
   return [(longitude - CENTRO_LONGITUDE) * CORRECAO_LONGITUDE, -(latitude - CENTRO_LATITUDE)];
 }
 
+/** Ponto `i` de `total` espalhados por igual na superfície de uma esfera (espiral de Fibonacci). */
+export function pontoNaEsfera(i: number, total: number, raio: number): [number, number, number] {
+  const y = 1 - (2 * (i + 0.5)) / total;
+  const raioNaAltura = Math.sqrt(1 - y * y);
+  const angulo = i * ANGULO_DOURADO;
+  return [Math.cos(angulo) * raioNaAltura * raio, y * raio, Math.sin(angulo) * raioNaAltura * raio];
+}
+
 function montarEsfera(total: number): Float32Array {
   const saida = new Float32Array(total * 3);
-  for (let i = 0; i < total; i += 1) {
-    const y = 1 - (2 * (i + 0.5)) / total;
-    const raio = Math.sqrt(1 - y * y);
-    const angulo = i * ANGULO_DOURADO;
-    saida.set([Math.cos(angulo) * raio * RAIO_ESFERA, y * RAIO_ESFERA, Math.sin(angulo) * raio * RAIO_ESFERA], i * 3);
-  }
+  for (let i = 0; i < total; i += 1) saida.set(pontoNaEsfera(i, total, RAIO_ESFERA), i * 3);
   return saida;
 }
 
@@ -85,8 +88,12 @@ function montarHistograma(pontos: readonly Ponto[], larguraFaixa: number): { pos
 }
 
 /** Semente estável derivada do índice: o mesmo cubo sempre anima no mesmo momento. */
+export function sementeDe(i: number): number {
+  return (i * 0.618034) % 1;
+}
+
 function montarSementes(total: number): Float32Array {
-  return Float32Array.from({ length: total }, (_, i) => (i * 0.618034) % 1);
+  return Float32Array.from({ length: total }, (_, i) => sementeDe(i));
 }
 
 export function montarLayouts(historia: Historia): Layouts {
