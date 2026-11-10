@@ -179,17 +179,7 @@ h2 { font-size: clamp(32px, 4vw, 52px); }
 .botao { transition: transform 0.15s ease; }
 .entra { animation: entrar 0.5s cubic-bezier(0.16, 1, 0.3, 1) both; animation-delay: calc(var(--i, 0) * 18ms); }
 .barra-cheia { animation: crescer 0.9s cubic-bezier(0.16, 1, 0.3, 1) both; animation-delay: calc(var(--i, 0) * 18ms + 180ms); }
-.uf, .cidades button, .escolhido button, /* Trilha: pontos na lateral, um por parte da história */
-.trilha { position: fixed; right: 10px; top: 50%; transform: translateY(-50%); z-index: 3; display: flex; flex-direction: column; }
-.trilha button { display: grid; place-items: center; width: 24px; height: 22px; padding: 0; border: 0; background: none; cursor: pointer; }
-.trilha button::before { content: ""; width: 6px; height: 6px; border-radius: 3px; background: #4a5661; transition: height 0.3s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.3s ease; }
-.trilha button:hover::before { background: var(--apagado); }
-.trilha button[aria-current]::before { height: 18px; background: var(--tinta); }
-.trilha button:focus { outline: none; }
-.trilha button:focus-visible { outline: 2px solid var(--tinta); border-radius: 6px; }
-@media (max-width: 899px) { .trilha { display: none; } }
-
-.botao-movimento { transition: border-color 0.15s ease, background-color 0.15s ease, transform 0.15s ease; }
+.uf, .cidades button, .escolhido button, .botao-movimento { transition: border-color 0.15s ease, background-color 0.15s ease, transform 0.15s ease; }
 .campo { transition: border-color 0.15s ease; }
 .luz div { transition: opacity 0.8s ease; will-change: transform; }
 
